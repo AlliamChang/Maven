@@ -8,8 +8,8 @@ import com.alibaba.fastjson.spi.Module;
 public class Test2 {
     public static void parseJson(){
         JSON.parse("{a:1}");
-        new Module(){
-
+        // Class Module exists in fastjson:1.2.58 but not in fastjson:1.1.46
+        Module m = new Module(){
             @Override
             public ObjectDeserializer createDeserializer(ParserConfig parserConfig, Class aClass) {
                 return null;
@@ -20,5 +20,6 @@ public class Test2 {
                 return null;
             }
         };
+        System.out.println("Test2.parseJson() pass");
     }
 }

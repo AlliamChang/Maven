@@ -8,5 +8,6 @@ public class Test1 {
 
     public static void parseJson(){
         JSON.parse("{a:1}");
+        System.out.println("Test1.parseJson() pass");
     }
 }
