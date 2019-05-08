@@ -1,5 +1,8 @@
 # POM管理方案
 
+## 管理依赖的插件
+* Idea: Maven Helper
+
 ## Maven-shade-plugin
 对依赖包重命名，达到依赖隔离的目的。
 ```xml

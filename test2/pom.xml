@@ -12,6 +12,8 @@
     <artifactId>test2</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <dependencies></dependencies>
+    <dependencies>
+
+    </dependencies>
 
 </project>

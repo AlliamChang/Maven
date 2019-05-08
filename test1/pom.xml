@@ -16,7 +16,8 @@
     <packaging>pom</packaging>
 
     <dependencies>
-         <!--https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+        <!--overwrite-->
+        <!--https://mvnrepository.com/artifact/com.alibaba/fastjson -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>

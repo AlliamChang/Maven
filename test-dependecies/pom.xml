@@ -21,13 +21,18 @@
         </plugins>
     </build>
 
+    <properties>
+        <fastjson.version>1.2.58</fastjson.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.58</version>
+            <version>${fastjson.version}</version>
         </dependency>
     </dependencies>
 
-
+    <dependencyManagement>
+        <!--这里的dependency不会被主动继承，需要显示声明继承，继承时不需填写版本号-->
+    </dependencyManagement>
 </project>
