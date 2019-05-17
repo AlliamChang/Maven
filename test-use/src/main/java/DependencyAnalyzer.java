@@ -6,6 +6,11 @@ import java.util.Map;
 
 public class DependencyAnalyzer {
 
+    /**
+     * 利用maven dependency:list罗列出来的依赖，进行整理分析
+     * @param dependenciesList
+     * @param onlyConflict
+     */
     public static void checkConflict(File dependenciesList, boolean onlyConflict) {
         if(!dependenciesList.exists() || dependenciesList.isDirectory()){
             return;
@@ -82,9 +87,19 @@ public class DependencyAnalyzer {
         }
     }
 
-    public static void checkConflictFromEnforcer(File dependencyConflict, int layer, List<String> modules, boolean checkTranswarp) {
+    /**
+     * 利用enforcer罗列出来的依赖冲突，进行整理分析
+     * @param dependencyConflict enforcer输出到文件中的冲突列表
+     * @param layer 希望展示的层次深度, -1表示全部展开
+     * @param modules 在间接引用中不希望出现的module
+     * @param checkTranswarp 是否排除间接引用中属于transwarp的module
+     */
+    public static void checkConflictFromEnforcer(File dependencyConflict, String outputFilename, int layer, List<Dependency> modules, boolean checkTranswarp) {
         if (!dependencyConflict.exists() || dependencyConflict.isDirectory()) {
             return;
+        }
+        if (null == modules) {
+            modules = new ArrayList<>();
         }
 
         Map<Dependency, Map<VersionAndScope,List<Dependency>>> list = new HashMap<>();
@@ -98,7 +113,7 @@ public class DependencyAnalyzer {
                 if(flag == 1 && !line.trim().startsWith("+-")){
                     flagLayer = 0;
                     flag = 0;
-                    if (now != null) {
+                    if (now != null && !modules.contains(now.getChild())) {
                         Map<VersionAndScope, List<Dependency>> vns = list.get(key);
                         Dependency child = now;
                         while (child.getChild() != null){child = child.getChild();}
@@ -148,8 +163,9 @@ public class DependencyAnalyzer {
                 }
             }
 
-            FileWriter writer = new FileWriter("dependency-conflict.csv");
+            FileWriter writer = new FileWriter(outputFilename + ".csv");
             StringBuilder sb = new StringBuilder();
+            sb.append("冲突的依赖,版本号,第一层引用者,第二层引用者,第三层引用者,第四层引用者,第五层引用者\n");
             for (Map.Entry<Dependency, Map<VersionAndScope, List<Dependency>>> dependencies : list.entrySet()) {
                 int i = 0;
                 for (Map.Entry<VersionAndScope,List<Dependency>> vns : dependencies.getValue().entrySet()) {
@@ -163,7 +179,7 @@ public class DependencyAnalyzer {
                         if (k == 0) {
                             l += vns.getKey().toString();
                         }
-                        l += "," + dependency.toString();
+                        l += "," + dependency.toString() + ":" + (dependency.getVersionAndScope() == null? "":dependency.getVersionAndScope().toString());
                         Dependency child = dependency;
                         int flagLayer2 = 1;
                         while (child.getChild() != null) {
@@ -177,7 +193,7 @@ public class DependencyAnalyzer {
                                 break;
                             }
                             if (flagLayer2 < layer || layer < 0) {
-                                l += "," + child.toString();
+                                l += "," + child.toString() + ":" + (child.getVersionAndScope() == null? "":child.getVersionAndScope().toString());
                             }
                             flagLayer2 ++;
                         }

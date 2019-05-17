@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class Dependency {
 
     private String groupId = "";
@@ -61,5 +63,15 @@ public class Dependency {
     @Override
     public String toString() {
         return groupId + ":" + artifactId;
+    }
+
+    public static void addModule(List<Dependency> modules, String groupId, String artifactId) {
+        if (null == modules) {
+            return;
+        }
+        Dependency dependency = new Dependency();
+        dependency.setGroupId(groupId);
+        dependency.setArtifactId(artifactId);
+        modules.add(dependency);
     }
 }
